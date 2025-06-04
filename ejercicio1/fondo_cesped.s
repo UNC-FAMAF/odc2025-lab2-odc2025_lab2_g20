@@ -4,6 +4,9 @@
 	
 //------------------------------ FONDO ---------------------------------//
 fondo_cesped:
+	sub sp, sp, 8
+	
+	str x30, [sp, #8]
     mov x0, 0            // x
     mov x7, 0            // y
     mov x1, 640            // ancho
@@ -52,6 +55,8 @@ fondo_cesped:
     movz x10, 0x002B, lsl 16  // 
     movk x10, 0x7A26, lsl 0 
     bl cuadro
-
+	
+	ldr x30, [sp, #8] 
+    add sp, sp, 8
 	ret
 	

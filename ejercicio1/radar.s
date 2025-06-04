@@ -6,6 +6,9 @@
 
 //------------------------------RADAR------------------------------------//
 radar:
+	sub sp,sp, 40  // Reserve space for one register
+	str x30,[sp, #32]  // Store Register X30 in stack
+	
     mov x0, x20           // Framebuffer
     mov x4, 35            // radio
     mov x15, 410          // Y
@@ -264,4 +267,7 @@ radar:
     movz w4, 0x00FF, lsl 16   // color
     movk w4, 0x0000, lsl 0 
     bl dibujar_triangulo
-ret
+    
+    ldr x30, [sp, #32] 
+    add sp, sp, 40	// liberamos la memoria reservada
+	ret

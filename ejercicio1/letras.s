@@ -6,7 +6,9 @@
 	
 //----------------------LETRAS--------------------------------//
 letras:
-
+	sub sp,sp, #8  // Reserve space for one register
+	str x30,[sp,#0]  // Store Register X30 in stack
+	
 //LETRA O
 
 	//triangulo hacia arriba
@@ -1153,4 +1155,8 @@ letras:
 	mov w4, 0xFFFF0000
 	bl dibujar_triangulo_abajo 
 	
+	ldr x30,[sp,#0]  // Restore X30 value from stack
+    add sp,sp, #8  // Restore SP to initial position
+
+    br x30
 	ret

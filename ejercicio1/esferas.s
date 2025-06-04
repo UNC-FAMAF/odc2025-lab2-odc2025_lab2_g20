@@ -6,6 +6,10 @@
 
 //--------------------------------SOMBRAS------------------------------------// 
 esferas:
+
+	sub sp,sp, 40  // Reserve space for one register
+	str x30,[sp,#32]
+	
     mov x0, x20           // Framebuffer
     mov x4, 60            // radio
     mov x15, 300          // Y
@@ -350,4 +354,7 @@ esferas:
     movz x10, 0xFFFF, lsl 16  // color
     movk x10, 0xFFFF, lsl 0
     bl circulo
+    
+    ldr x30, [sp, #32] 
+    add sp, sp, 40	// liberamos la memoria reservada
 ret

@@ -7,6 +7,7 @@
 	.equ GPIO_GPLEV0,    0x34
 
 	.globl main
+	.globl app.s
 
 main:
 	// x0 contiene la direccion base del framebuffer
@@ -15,10 +16,13 @@ main:
 	
 	
 //--------------------------- CODE HERE ------------------------------------//
-
+	
 	bl fondo_cesped
 	bl pasto
- 	
+	bl esferas
+	bl radar
+	bl letras
+	
     InfLoop:
     b InfLoop
 
