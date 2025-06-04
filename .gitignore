@@ -1,0 +1,18 @@
+# Ignorar archivos temporales y de sistema
+*.swp
+.gdb_history
+
+# Ignorar binarios y archivos generados
+*.o
+*.elf
+*.img
+*.list
+memory_map.txt
+
+# Por si se generan otros objetos intermedios
+*.bin
+*.map
+
+# Ignorar archivos que no deben subirse
+*.bak
+*~
