@@ -1,210 +1,114 @@
-.equ SCREEN_WIDTH,     640
-.equ SCREEN_HEIGHT,    480
-.equ BYTES_PER_PIXEL,  4      // 32 bits = 4 bytes por pixel
+	.equ SCREEN_WIDTH, 		640
+	.equ SCREEN_HEIGH, 		480
+	.equ BITS_PER_PIXEL,  	32
 
-.globl main
+	.equ GPIO_BASE,      0x3f200000
+	.equ GPIO_GPFSEL0,   0x00
+	.equ GPIO_GPLEV0,    0x34
+
+	.globl main
+	.globl app.s
+
+
+invertir_vx1:
+    neg x21, x21
+    ret
+
+invertir_vx2:
+    neg x22, x22
+    ret
+
+invertir_vx3:
+    neg x23, x23
+    ret
+
+delay:
+    mov X2, #0x07FFFFF    // Ajustá este valor para más/menos retardo
+delay_loop:
+    subs X2, X2, #1
+    b.ne delay_loop
+    ret
+
 
 main:
-    mov x19, x0        // framebuffer base
-
-    // Inicializar rojo
-    mov x20, 0         // x rojo
-    mov x21, 100       // y rojo
-
-    // Inicializar azul
-    mov x24, 300       // x azul
-    mov x25, 0         // y azul
-
-    // Inicializar verde
-    mov x26, 100       // x verde
-    mov x27, 0         // y verde
-
-    mov x22, 100       // ancho común
-    mov x23, 100       // alto común
-
-// cielo
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 0
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x0020, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 60
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x0020, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 120
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x0020, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 180
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x0020, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 240
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x0040, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 300
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x0050, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 360
-    mov x3, 640
-    mov x4, 60
-    movz w10, 0x00C0, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-    mov x0, x19
-    mov x1, 0
-    mov x2, 420
-    mov x3, 640
-    mov x4, 50
-    movz w10, 0x00E0, lsl 0
-    movk w10, 0x0000, lsl 16
-    bl dibujar_rect
-
-// Inicializar celeste
-    mov x28, 0         // x celeste
-    mov x29, 470       // y celeste (empieza abajo del todo)
-
-bucle_animacion:
-
+	// x0 contiene la direccion base del framebuffer
+ 	mov x20, x0	// Guarda la dirección base del framebuffer en x20
+	
     
+    // Inicialización de velocidades para cada esfera (pueden ser negativos o positivos)
+    mov x21, 2     // vx1 para x29
+    mov x22, -2    // vx2 para x28
+    mov x23, 2     // vx3 para x27
+    
+    mov x29, 240 //inicializacion
+    mov x28, 340 // inicializacion
+    mov x27, 280
+
+animacion:
+
+    bl fondo_cesped          // Borra el fondo al inicio
+	bl pasto
+    bl radar
+	bl letras
+	
+    mov x0, x20           // Framebuffer
+    mov x4, 60            // radio
+    mov x15, 155          // Y
+    mov x17, x29          // X
+    movz x10, 0x0010, lsl 16  // color
+    movk x10, 0x4403, lsl 0
+    bl circulo
+    
+    mov x0, x20           // Framebuffer
+    mov x4, 80            // radio
+    mov x15, 270          // Y
+    mov x17, x28          // X
+    movz x10, 0x0010, lsl 16  // color
+    movk x10, 0x4403, lsl 0
+    bl circulo
+    
+    
+    mov x0, x20           // Framebuffer
+    mov x4, 75            // radio
+    mov x15, 130          // Y
+    mov x17, x27          // X
+    movz x10, 0x00B6, lsl 16  // color
+    movk x10, 0x4E08, lsl 0
+    bl circulo
+         
+    // Solo un delay
+    bl delay
 
 
-    mov x0, x19
-    mov x1, x28        // x celeste
-    mov x2, x29        // y celeste
-    mov x3, 640        // ancho celeste
-    mov x4, 10         // alto celeste
-    movz w10, 0xCEEB, lsl 0
-    movk w10, 0x0087, lsl 16
-    bl dibujar_rect
+    // ====================
+    // Rebote para x29
+    add x29, x29, x21
+    // Si x29 <= 0 o x29 >= SCREEN_WIDTH - radio => invertir dirección
+    mov x0, x29
+    cmp x0, #0
+    b.lt invertir_vx1
+    mov x1, #640 - 60     // pantalla - radio
+    cmp x0, x1
+    b.gt invertir_vx1
 
+    // ====================
+    // Rebote para x28
+    add x28, x28, x22
+    mov x0, x28
+    cmp x0, #0
+    b.lt invertir_vx2
+    mov x1, #640 - 80
+    cmp x0, x1
+    b.gt invertir_vx2
 
+    // ====================
+    // Rebote para x27
+    add x27, x27, x23
+    mov x0, x27
+    cmp x0, #0
+    b.lt invertir_vx3
+    mov x1, #640 - 75
+    cmp x0, x1
+    b.gt invertir_vx3
 
-    // Delay general
-    movz x0, 0xFFFF, lsl #0        // parte baja
-    movk x0, 0x00FF, lsl #16       // parte alta
-    bl delay_custom
-
-    // --- Actualizar posiciones ---
-
-
-    // Celeste: mover vertical hacia arriba
-    sub x29, x29, 2           // velocidad: 2 píxeles por frame
-    cmp x29, 0
-    b.ge ok_celeste_y       // salta si x29 >= 0, o sea todavía no salió
-    mov x29, 470            // si x29 < 0, reiniciar desde abajo
-ok_celeste_y:
-
-    b bucle_animacion
-
-// -------------------- RUTINA: PINTAR FONDO --------------------
-pintar_fondo:
-    sub sp, sp, 16
-    stur lr, [sp, 8]
-    stur x0, [sp, 0]
-
-    mov x1, 0
-    mov x2, SCREEN_WIDTH
-    mov x3, SCREEN_HEIGHT
-    mul x4, x2, x3
-
-loop_fondo:
-    cmp x1, x4
-    b.ge fin_fondo
-
-    lsl x5, x1, 2
-    add x6, x0, x5
-    str w10, [x6]
-    add x1, x1, 1
-    b loop_fondo
-
-fin_fondo:
-    ldur x0, [sp, 0]
-    ldur lr, [sp, 8]
-    add sp, sp, 16
-    ret
-
-// ------------------ RUTINA: DIBUJAR RECTÁNGULO ------------------
-dibujar_rect:
-    sub sp, sp, 16
-    stur lr, [sp, 8]
-    stur x20, [sp, 0]
-
-    mov w11, w10
-    mov x5, 0               // fila actual
-
-rect_loop_y:
-    cmp x5, x4              // alto
-    b.ge fin_rect
-
-    mov x6, 0               // columna actual
-rect_loop_x:
-    cmp x6, x3              // ancho
-    b.ge fin_linea
-
-    add x7, x2, x5
-    mov x8, SCREEN_WIDTH
-    mul x9, x7, x8
-    add x9, x9, x1
-    add x9, x9, x6
-    lsl x9, x9, 2
-    add x10, x0, x9
-    str w11, [x10]
-
-    add x6, x6, 1
-    b rect_loop_x
-
-fin_linea:
-    add x5, x5, 1
-    b rect_loop_y
-
-fin_rect:
-    ldur x20, [sp, 0]
-    ldur lr, [sp, 8]
-    add sp, sp, 16
-    ret
-
-// ---------------------- RUTINA: DELAY CON PARÁMETRO -------------------------
-delay_custom:
-    // x0 contiene el valor de delay
-delay_loop_custom:
-    subs x0, x0, 1
-    b.ne delay_loop_custom
-    ret
-
+    b animacion
