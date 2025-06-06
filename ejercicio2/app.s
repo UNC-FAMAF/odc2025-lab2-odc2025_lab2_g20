@@ -9,24 +9,32 @@
 	.globl main
 	.globl app.s
 
+
+
+
 main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	
-	
-	
-//--------------------------- CODE HERE ------------------------------------//
-	
-	bl fondo_cesped
-	bl pasto
-	bl esferas
-	bl radar
-	bl letras
-	
+
+    bl fondo_cesped
+    bl pasto
+    bl esferas
+  
+    mov x0, x20         // framebuffer
+    mov x1, 270        // Y
+    mov x2, 340        // X
+    mov x3, 80         // radio
+
+    bl dibujar_esfera_completa
+    
+    bl radar
+    bl letras 
+      
+        
+    // Llama a la esfera
+ 
+
+
     InfLoop:
     b InfLoop
-
-
-    
-
-  
