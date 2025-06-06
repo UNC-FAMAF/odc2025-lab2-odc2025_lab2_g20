@@ -2,6 +2,7 @@
 	.equ SCREEN_HEIGH, 		480
 	.equ BITS_PER_PIXEL,  	32
 
+
 	.equ GPIO_BASE,      0x3f200000
 	.equ GPIO_GPFSEL0,   0x00
 	.equ GPIO_GPLEV0,    0x34
@@ -30,11 +31,10 @@ delay_loop:
     ret
 
 
-main:
-	// x0 contiene la direccion base del framebuffer
- 	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	
-    
+	
+//--------------------------- CODE HERE ------------------------------------//
+
     // Inicialización de velocidades para cada esfera (pueden ser negativos o positivos)
     mov x21, 2     // vx1 para x29
     mov x22, -2    // vx2 para x28
@@ -112,3 +112,5 @@ animacion:
     b.gt invertir_vx3
 
     b animacion
+
+
