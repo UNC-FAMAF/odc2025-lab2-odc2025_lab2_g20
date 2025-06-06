@@ -2,6 +2,7 @@
 	.equ SCREEN_HEIGH, 		480
 	.equ BITS_PER_PIXEL,  	32
 
+
 	.equ GPIO_BASE,      0x3f200000
 	.equ GPIO_GPFSEL0,   0x00
 	.equ GPIO_GPLEV0,    0x34
@@ -29,12 +30,13 @@ delay_loop:
     b.ne delay_loop
     ret
 
-
 main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	
-    
+	
+//--------------------------- CODE HERE ------------------------------------//
+
     // Inicialización de velocidades para cada esfera (pueden ser negativos o positivos)
     mov x21, 2     // vx1 para x29
     mov x22, -2    // vx2 para x28
@@ -80,6 +82,7 @@ animacion:
     bl delay
 
 
+
     // ====================
     // Rebote para x29
     add x29, x29, x21
@@ -112,3 +115,39 @@ animacion:
     b.gt invertir_vx3
 
     b animacion
+
+
+
+    // ====================
+    // Rebote para x29
+    add x29, x29, x21
+    // Si x29 <= 0 o x29 >= SCREEN_WIDTH - radio => invertir dirección
+    mov x0, x29
+    cmp x0, #0
+    b.lt invertir_vx1
+    mov x1, #640 - 60     // pantalla - radio
+    cmp x0, x1
+    b.gt invertir_vx1
+
+    // ====================
+    // Rebote para x28
+    add x28, x28, x22
+    mov x0, x28
+    cmp x0, #0
+    b.lt invertir_vx2
+    mov x1, #640 - 80
+    cmp x0, x1
+    b.gt invertir_vx2
+
+    // ====================
+    // Rebote para x27
+    add x27, x27, x23
+    mov x0, x27
+    cmp x0, #0
+    b.lt invertir_vx3
+    mov x1, #640 - 75
+    cmp x0, x1
+    b.gt invertir_vx3
+
+    b animacion
+
