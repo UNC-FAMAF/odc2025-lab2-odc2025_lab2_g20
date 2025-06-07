@@ -1,8 +1,8 @@
-	.equ SCREEN_WIDTH, 		640
-	.equ SCREEN_HEIGH, 		480
-	.equ BITS_PER_PIXEL,  	32
+        .equ SCREEN_WIDTH,         640
+    .equ SCREEN_HEIGH,         480
+    .equ BITS_PER_PIXEL,      32
 
-	.globl dibujar_esfera_completa
+    .globl dibujar_esfera_completa
 
 
 
@@ -28,7 +28,7 @@ dibujar_esfera_completa:
     sub x15, x5, 30
     add x17, x6, 20
     mov x4, x7
-    movz x10, #0x4E08, lsl #0     
+    movz x10, #0x4E08, lsl #0
     movk x10, #0x00B6, lsl #16
     bl circulo
 
@@ -41,7 +41,7 @@ dibujar_esfera_completa:
     bl circulo
 
     // Círculo chico
-    
+
     sub x15, x5, 30
     add x17, x6, 20
     sub x4, x7, 30
@@ -59,24 +59,37 @@ dibujar_esfera_completa:
 
 
     // --------------- Brillo 2 -------------------
-    
+
     sub x15, x5, 65
     add x17, x6, 60
     sub x4, x7, 60
     movz x10, 0x00FF, lsl 16
     movk x10, 0xFFFF, lsl 0
     bl circulo
-    
+
     // --------------- Brillo 3 -------------------
-  
+
     sub x15, x5, 80
     add x17, x6, 80
     sub x4, x7, 76
     movz x10, 0x00FF, lsl 16
     movk x10, 0xFFFF, lsl 0
     bl circulo
-    
-    
+//-------------ESTRELLA---------------------//s
+
+
+    add x1, x6, 20
+    sub x2, x5, 30
+    mov x3, #7
+    mov w4, 0xFFFF0000
+    bl dibujar_triangulo
+
+    add x1, x6, 0
+    add x2, x8, 241
+    mov x3, #6
+    mov w4, 0xFFFF0000
+    bl dibujar_triangulo_abajo
+
     ldr x30, [sp, #24]
     add sp, sp, 32
     ret

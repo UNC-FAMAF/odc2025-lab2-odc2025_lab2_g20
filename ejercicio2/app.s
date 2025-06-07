@@ -11,31 +11,68 @@
 	.globl app.s
 
 
+
+invertir_vx1:
+    neg x21, x21
+    ret
+
+
+delay:
+    mov X2, #0x07FFFFFF  
+delay_loop:
+    subs X2, X2, #1
+    b.ne delay_loop
+    ret
+
+
+
 main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
 	
+    // Inicialización de velocidades para cada esfera (pueden ser negativos o positivos)
+    mov x21, 10	     // vx1 para x29
 
+    
+    mov x29, 340 //inicializacion
+animacion:
+   
+   
 
+        
     bl fondo_cesped
     bl pasto
     bl esferas
+    bl letras 
+    bl radar  
   
     mov x0, x20         // framebuffer
     mov x1, 270        // Y
-    mov x2, 340        // X
+    mov x2, x29        // X
     mov x3, 80         // radio
+    
 
     bl dibujar_esfera_completa
-    
-    bl radar
-    bl letras 
-      
-        
-    // Llama a la esfera
- 
+     
+
+    bl delay
 
 
-    InfLoop:
-    b InfLoop
+    // ====================
+    // Rebote para x29
+    add x29, x29, x21
+    // Si x29 <= 0 o x29 >= SCREEN_WIDTH - radio => invertir dirección
+    mov x0, x29
+    cmp x0, 80
+    b.lt invertir_vx1
+    mov x1, #640 - 95     // pantalla - radio
+    cmp x0, x1
+    b.gt invertir_vx1
+
+
+
+    b animacion
+
+
+
 

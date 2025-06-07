@@ -42,14 +42,7 @@ esferas:
     movk x10, 0x4403, lsl 0
     bl circulo
     
-    mov x0, x20           // Framebuffer
-    mov x4, 80            // radio
-    mov x15, 270          // Y
-    mov x17, 340          // X
-    movz x10, 0x0010, lsl 16  // color
-    movk x10, 0x4403, lsl 0
-    bl circulo
-    
+
     mov x0, x20           // Framebuffer
     mov x4, 80            // radio
     mov x15, 340          // Y
@@ -109,14 +102,7 @@ esferas:
     movk x10, 0x4E08, lsl 0
     bl circulo
     
-    mov x0, x20           // Framebuffer
-    mov x4, 80            // radio
-    mov x15, 240          // Y
-    mov x17, 360          // X
-    movz x10, 0x00B6, lsl 16  // color
-    movk x10, 0x4E08, lsl 0
-    bl circulo
-    
+
     mov x0, x20           // Framebuffer
     mov x4, 80            // radio
     mov x15, 320          // Y
@@ -186,17 +172,7 @@ esferas:
     movk x11, 0x8035, lsl 0
     bl doble_circulo
     
-//5 
-    mov x0, x20           // framebuffer base
-    mov x15, 240          // centro y 
-    mov x17, 360          // centro x
-    mov x4, #75           // radio grande
-    mov x5, #50           // radio chico
-    movz x10, 0x00DB, lsl 16  // color grande
-    movk x10, 0x5F0C, lsl 0
-    movz x11, 0x00F0, lsl 16  // color chico
-    movk x11, 0x8035, lsl 0
-    bl doble_circulo
+
     
 //6 
     mov x0, x20           // framebuffer base
@@ -298,30 +274,7 @@ esferas:
     movz x10, 0xFFFF, lsl 16  // color
     movk x10, 0xFFFF, lsl 0
     bl circulo        
-    
-    mov x0, x20           // Framebuffer
-    mov x4, 22            // radio
-    mov x15, 190          // Y
-    mov x17, 390          // X
-    movz x10, 0xFFFF, lsl 16  // color
-    movk x10, 0xFFFF, lsl 0
-    bl circulo
-   
-    mov x0, x20           // Framebuffer
-    mov x4, 20            // radio
-    mov x15, 205          // Y
-    mov x17, 400          // X
-    movz x10, 0xFFFF, lsl 16  // color
-    movk x10, 0xFFFF, lsl 0
-    bl circulo
-    
-    mov x0, x20           // Framebuffer
-    mov x4, 4            // radio
-    mov x15, 190          // Y
-    mov x17, 420          // X
-    movz x10, 0xFFFF, lsl 16  // color
-    movk x10, 0xFFFF, lsl 0
-    bl circulo          
+
    
     mov x0, x20           // Framebuffer
     mov x4, 19            // radio
