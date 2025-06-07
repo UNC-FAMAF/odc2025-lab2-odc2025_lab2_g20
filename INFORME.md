@@ -14,3 +14,4 @@ Descripción ejercicio 2:
 
 
 Justificación instrucciones ARMv8:
+en ejercicio2/app.s: utilizamos para el movimiento al momento de chocar la esfera contra las paredes una instruccion de negacion:     "neg x21, x21" que calcula el opuesto aritmetico del valor del segundo registro y lo guarda en el primero. 
