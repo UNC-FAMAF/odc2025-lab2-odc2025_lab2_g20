@@ -44,6 +44,7 @@ animacion:
     bl pasto
     bl esferas
     bl letras 
+    bl dragon
     bl radar  
   
     mov x0, x20         // framebuffer
